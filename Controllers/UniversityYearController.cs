@@ -26,9 +26,9 @@ namespace ServLab7.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UniversityYear>> Get(int id)
+        public async Task<ActionResult<IEnumerable<UniversityYear>>> Get(int id)
         {
-            var res = await _universityContext.UniversityYears.FirstOrDefaultAsync(x => x.UniversityId == id);
+            var res = await _universityContext.UniversityYears.Where(x => x.UniversityId == id).ToListAsync();
             if (res == null)
             {
                 return NotFound();
@@ -36,6 +36,54 @@ namespace ServLab7.Controllers
             else
                 return new ObjectResult(res);
 
+        }
+
+        [HttpGet("{id}/{year}")]
+        public async Task<ActionResult<UniversityYear>> Get(int id, int year)
+        {
+            var res = await _universityContext.UniversityYears.FirstOrDefaultAsync(x => x.UniversityId == id && x.Year == year);
+            if (res == null)
+            {
+                return NotFound();
+            }
+            else
+                return new ObjectResult(res);
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<UniversityYear>> Post(UniversityYear item)
+        {
+            if (item == null)
+                return BadRequest();
+
+            _universityContext.UniversityYears.Add(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<UniversityYear>> Put(UniversityYear item)
+        {
+            if (item == null)
+                return BadRequest();
+            if (!_universityContext.UniversityYears.Any(x => x.UniversityId == item.UniversityId && x.Year == item.Year))
+                return NotFound();
+
+            _universityContext.Update(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
+        }
+
+        [HttpDelete("{id}/{year}")]
+        public async Task<ActionResult<UniversityYear>> Delete(int id, int year)
+        {
+            var item = _universityContext.UniversityYears.FirstOrDefault(x => x.UniversityId == id && x.Year == year);
+            if (item == null)
+                return NotFound();
+            _universityContext.UniversityYears.Remove(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
         }
     }
 }

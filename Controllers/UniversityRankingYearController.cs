@@ -24,10 +24,10 @@ namespace ServLab7.Controllers
 
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UniversityRankingYear>> Get(int id)
+        [HttpGet("{Uid}")]
+        public async Task<ActionResult<UniversityRankingYear>> Get(int Uid)
         {
-            var res = await _universityContext.UniversityRankingYears.FirstOrDefaultAsync(x => x.UniversityId == id);
+            var res = await _universityContext.UniversityRankingYears.Where(x => x.UniversityId == Uid).ToListAsync();
             if (res == null)
             {
                 return NotFound();
@@ -35,6 +35,67 @@ namespace ServLab7.Controllers
             else
                 return new ObjectResult(res);
 
+        }
+
+        [HttpGet("{Uid}/{Rid}")]
+        public async Task<ActionResult<UniversityRankingYear>> Get(int Uid, int Rid)
+        {
+            var res = await _universityContext.UniversityRankingYears.Where(x => x.UniversityId == Uid && x.RankingCriteriaId == Rid).ToListAsync();
+            if (res == null)
+            {
+                return NotFound();
+            }
+            else
+                return new ObjectResult(res);
+
+        }
+
+        [HttpGet("{Uid}/{Rid}/{Year}")]
+        public async Task<ActionResult<UniversityRankingYear>> Get(int Uid, int Rid, int Year)
+        {
+            var res = await _universityContext.UniversityRankingYears.FirstOrDefaultAsync(x => x.UniversityId == Uid && x.RankingCriteriaId == Rid && x.Year == Year);
+            if (res == null)
+            {
+                return NotFound();
+            }
+            else
+                return new ObjectResult(res);
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<UniversityRankingYear>> Post(UniversityRankingYear item)
+        {
+            if (item == null)
+                return BadRequest();
+
+            _universityContext.UniversityRankingYears.Add(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<UniversityRankingYear>> Put(UniversityRankingYear item)
+        {
+            if (item == null)
+                return BadRequest();
+            if (!_universityContext.UniversityRankingYears.Any(x => x.UniversityId == item.UniversityId && x.RankingCriteriaId == item.RankingCriteriaId && item.Year == x.Year))
+                return NotFound();
+
+            _universityContext.Update(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
+        }
+
+        [HttpDelete("{Uid}/{Rid}/{Year}")]
+        public async Task<ActionResult<UniversityRankingYear>> Delete(int Uid,int Rid, int Year)
+        {
+            var item = _universityContext.UniversityRankingYears.FirstOrDefault(x => x.UniversityId == Uid && x.RankingCriteriaId == Rid && x.Year == Year);
+            if (item == null)
+                return NotFound();
+            _universityContext.UniversityRankingYears.Remove(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace ServLab7.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<University>>> Get()
         {
-            return await _universityContext.Universities.ToListAsync();
+            return await _universityContext.Universities.Include(x => x.Country).ToListAsync();
 
         }
 
@@ -35,6 +35,50 @@ namespace ServLab7.Controllers
             }
             else
                 return new ObjectResult(res);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<University>> Post(University item)
+        {
+            if (item == null)
+                return BadRequest();
+
+            _universityContext.Universities.Add(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<University>> Put(University item)
+        {
+            if (item == null)
+                return BadRequest();
+            if (!_universityContext.Universities.Any(x => x.Id == item.Id))
+                return NotFound();
+
+            _universityContext.Update(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<University>> Delete(int id)
+        {
+            var item = _universityContext.Universities.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+                return NotFound();
+            foreach (var i in _universityContext.UniversityYears.Where(x=>x.UniversityId == item.Id))
+            {
+                _universityContext.UniversityYears.Remove(i);
+            }
+            foreach (var i in _universityContext.UniversityRankingYears.Where(x => x.UniversityId == item.Id))
+            {
+                _universityContext.UniversityRankingYears.Remove(i);
+            }
+            //_universityContext.Countries.Where(x => x.Universities.Where(y => y.Id == item.Id))
+            _universityContext.Universities.Remove(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
         }
     }
 }

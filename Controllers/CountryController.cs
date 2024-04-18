@@ -25,7 +25,7 @@ namespace ServLab7.Controllers
         }*/
 
         [HttpGet("{mode}")]
-        public async Task<ActionResult<IEnumerable<Country>>> Get(string mode)
+        public async Task<ActionResult<IEnumerable<Country>>> Get(string mode = "0")
         {
             if (mode == "1")
                 return await _universityContext.Countries.Include(b => b.Universities).ToListAsync();
@@ -74,17 +74,28 @@ namespace ServLab7.Controllers
             return Ok(item);
         }
 
-        /*[HttpGet("{id}")]
-        public async Task<ActionResult<Country>> Get(int id, bool shit)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Country>> Delete(int id)
         {
-            //return await _universityContext.Countries.ToListAsync();
-            var res = await _universityContext.Countries.Include(b => b.Universities).FirstOrDefaultAsync(x => x.Id == id);
-            if (res == null)
-            {
+            var item = _universityContext.Countries.FirstOrDefault(x => x.Id == id);
+            if (item == null)
                 return NotFound();
+            foreach (var i in _universityContext.Universities.Where(x => x.CountryId == item.Id))
+            {
+                if (i == null) continue; 
+                foreach (var j in _universityContext.UniversityYears.Where(x => x.UniversityId == i.Id))
+                {
+                    _universityContext.UniversityYears.Remove(j);
+                }
+                foreach (var j in _universityContext.UniversityRankingYears.Where(x => x.UniversityId == i.Id))
+                {
+                    _universityContext.UniversityRankingYears.Remove(j);
+                }
+                _universityContext.Universities.Remove(i);
             }
-            else
-                return new ObjectResult(res);
-        }*/
+            _universityContext.Countries.Remove(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
+        }
     }
 }

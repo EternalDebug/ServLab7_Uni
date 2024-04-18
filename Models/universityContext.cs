@@ -92,7 +92,8 @@ namespace ServLab7.Models
 
             modelBuilder.Entity<UniversityRankingYear>(entity =>
             {
-                entity.HasNoKey();
+                //entity.HasNoKey();
+                entity.HasKey(e => new { e.UniversityId, e.RankingCriteriaId, e.Year });
 
                 entity.ToTable("university_ranking_year");
 
@@ -115,7 +116,9 @@ namespace ServLab7.Models
 
             modelBuilder.Entity<UniversityYear>(entity =>
             {
-                entity.HasNoKey();
+                //entity.HasNoKey();
+
+                entity.HasKey(e => new { e.UniversityId, e.Year });
 
                 entity.ToTable("university_year");
 

@@ -65,5 +65,25 @@ namespace ServLab7.Controllers
             await _universityContext.SaveChangesAsync();
             return Ok(item);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<RankingSystem>> Delete(int id)
+        {
+            var item = _universityContext.RankingSystems.FirstOrDefault(x => x.Id == id);
+            if (item == null)
+                return NotFound();
+            foreach (var i in _universityContext.RankingCriteria.Where(x => x.RankingSystemId == item.Id))
+            {
+                if (i == null) continue;
+                foreach (var j in _universityContext.UniversityRankingYears.Where(x => x.RankingCriteriaId == i.Id))
+                {
+                    _universityContext.UniversityRankingYears.Remove(j);
+                }
+                _universityContext.RankingCriteria.Remove(i);
+            }
+            _universityContext.RankingSystems.Remove(item);
+            await _universityContext.SaveChangesAsync();
+            return Ok(item);
+        }
     }
 }
