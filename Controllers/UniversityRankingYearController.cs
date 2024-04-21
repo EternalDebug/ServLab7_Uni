@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServLab7.Models;
 
@@ -16,14 +17,14 @@ namespace ServLab7.Controllers
             _logger = logger;
             _universityContext = universityContext;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UniversityRankingYear>>> Get()
         {
             return await _universityContext.UniversityRankingYears.ToListAsync();
 
         }
-
+        [Authorize]
         [HttpGet("{Uid}")]
         public async Task<ActionResult<UniversityRankingYear>> Get(int Uid)
         {
@@ -36,7 +37,7 @@ namespace ServLab7.Controllers
                 return new ObjectResult(res);
 
         }
-
+        [Authorize]
         [HttpGet("{Uid}/{Rid}")]
         public async Task<ActionResult<UniversityRankingYear>> Get(int Uid, int Rid)
         {
@@ -49,7 +50,7 @@ namespace ServLab7.Controllers
                 return new ObjectResult(res);
 
         }
-
+        [Authorize]
         [HttpGet("{Uid}/{Rid}/{Year}")]
         public async Task<ActionResult<UniversityRankingYear>> Get(int Uid, int Rid, int Year)
         {
@@ -62,7 +63,7 @@ namespace ServLab7.Controllers
                 return new ObjectResult(res);
 
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<UniversityRankingYear>> Post(UniversityRankingYear item)
         {
@@ -73,7 +74,7 @@ namespace ServLab7.Controllers
             await _universityContext.SaveChangesAsync();
             return Ok(item);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<UniversityRankingYear>> Put(UniversityRankingYear item)
         {
@@ -86,7 +87,7 @@ namespace ServLab7.Controllers
             await _universityContext.SaveChangesAsync();
             return Ok(item);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{Uid}/{Rid}/{Year}")]
         public async Task<ActionResult<UniversityRankingYear>> Delete(int Uid,int Rid, int Year)
         {

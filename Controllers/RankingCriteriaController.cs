@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServLab7.Models;
 
@@ -16,13 +17,13 @@ namespace ServLab7.Controllers
             _logger = logger;
             _universityContext = universityContext;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RankingCriterion>>> Get()
         {
             return await _universityContext.RankingCriteria.ToListAsync();
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<RankingCriterion>> Get(int id)
         {
@@ -35,7 +36,7 @@ namespace ServLab7.Controllers
             else
                 return new ObjectResult(res);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<RankingCriterion>> Post(RankingCriterion item)
         {
@@ -46,7 +47,7 @@ namespace ServLab7.Controllers
             await _universityContext.SaveChangesAsync();
             return Ok(item);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<RankingCriterion>> Put(RankingCriterion item)
         {
@@ -59,7 +60,7 @@ namespace ServLab7.Controllers
             await _universityContext.SaveChangesAsync();
             return Ok(item);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<RankingCriterion>> Delete(int id)
         {

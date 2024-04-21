@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServLab7.Models;
 
@@ -24,6 +25,7 @@ namespace ServLab7.Controllers
 
         }*/
 
+        [Authorize]
         [HttpGet("{mode}")]
         public async Task<ActionResult<IEnumerable<Country>>> Get(string mode = "0")
         {
@@ -33,6 +35,7 @@ namespace ServLab7.Controllers
                 return await _universityContext.Countries.ToListAsync();
         }
 
+        [Authorize]
         [HttpGet("{mode}/{id}")]
         public async Task<ActionResult<Country>> Get(string mode , int id)
         {
@@ -50,6 +53,7 @@ namespace ServLab7.Controllers
                 return new ObjectResult(res);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Country>> Post(Country item)
         {
@@ -61,6 +65,7 @@ namespace ServLab7.Controllers
             return Ok(item);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<Country>> Put(Country item)
         {
@@ -74,6 +79,7 @@ namespace ServLab7.Controllers
             return Ok(item);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Country>> Delete(int id)
         {

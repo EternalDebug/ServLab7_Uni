@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServLab7.Models;
@@ -17,14 +18,14 @@ namespace ServLab7.Controllers
             _logger = logger;
             _universityContext = universityContext;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UniversityYear>>> Get()
         {
             return await _universityContext.UniversityYears.ToListAsync();
 
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<UniversityYear>>> Get(int id)
         {
@@ -37,7 +38,7 @@ namespace ServLab7.Controllers
                 return new ObjectResult(res);
 
         }
-
+        [Authorize]
         [HttpGet("{id}/{year}")]
         public async Task<ActionResult<UniversityYear>> Get(int id, int year)
         {
@@ -50,7 +51,7 @@ namespace ServLab7.Controllers
                 return new ObjectResult(res);
 
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<UniversityYear>> Post(UniversityYear item)
         {
@@ -61,7 +62,7 @@ namespace ServLab7.Controllers
             await _universityContext.SaveChangesAsync();
             return Ok(item);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<UniversityYear>> Put(UniversityYear item)
         {
@@ -74,7 +75,7 @@ namespace ServLab7.Controllers
             await _universityContext.SaveChangesAsync();
             return Ok(item);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}/{year}")]
         public async Task<ActionResult<UniversityYear>> Delete(int id, int year)
         {

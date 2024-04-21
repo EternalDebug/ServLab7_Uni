@@ -22,6 +22,7 @@ namespace ServLab7.Models
         public virtual DbSet<University> Universities { get; set; } = null!;
         public virtual DbSet<UniversityRankingYear> UniversityRankingYears { get; set; } = null!;
         public virtual DbSet<UniversityYear> UniversityYears { get; set; } = null!;
+        public virtual DbSet<Uzver> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -137,6 +138,21 @@ namespace ServLab7.Models
                 entity.HasOne(d => d.University)
                     .WithMany()
                     .HasForeignKey(d => d.UniversityId);
+            });
+
+            modelBuilder.Entity<Uzver>(entity =>
+            {
+                //entity.HasNoKey();
+
+                entity.HasKey(e => new { e.Username, e.Password });
+
+                entity.ToTable("users");
+
+                entity.Property(e => e.Username).HasColumnName("username");
+
+                entity.Property(e => e.Password).HasColumnName("userpassword");
+
+                entity.Property(e => e.Role).HasColumnName("userrole");
             });
 
             OnModelCreatingPartial(modelBuilder);
