@@ -59,10 +59,13 @@ namespace ServLab7.Controllers
         {
             if (item == null)
                 return BadRequest();
-
-            _universityContext.Countries.Add(item);
-            await _universityContext.SaveChangesAsync();
-            return Ok(item);
+            try
+            {
+                _universityContext.Countries.Add(item);
+                await _universityContext.SaveChangesAsync();
+                return Ok(item);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
         [Authorize(Roles = "Admin")]
@@ -74,9 +77,13 @@ namespace ServLab7.Controllers
             if (!_universityContext.Countries.Any(x => x.Id == item.Id))
                 return NotFound();
 
-            _universityContext.Update(item);
-            await _universityContext.SaveChangesAsync();
-            return Ok(item);
+            try
+            {
+                _universityContext.Update(item);
+                await _universityContext.SaveChangesAsync();
+                return Ok(item);
+            }
+            catch(Exception ex) { return BadRequest(ex.Message); }
         }
 
         [Authorize(Roles = "Admin")]

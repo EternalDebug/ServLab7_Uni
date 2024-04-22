@@ -57,10 +57,13 @@ namespace ServLab7.Controllers
         {
             if (item == null)
                 return BadRequest();
-
-            _universityContext.UniversityYears.Add(item);
-            await _universityContext.SaveChangesAsync();
-            return Ok(item);
+            try
+            {
+                _universityContext.UniversityYears.Add(item);
+                await _universityContext.SaveChangesAsync();
+                return Ok(item);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
         [Authorize(Roles = "Admin")]
         [HttpPut]
@@ -71,9 +74,13 @@ namespace ServLab7.Controllers
             if (!_universityContext.UniversityYears.Any(x => x.UniversityId == item.UniversityId && x.Year == item.Year))
                 return NotFound();
 
-            _universityContext.Update(item);
-            await _universityContext.SaveChangesAsync();
-            return Ok(item);
+            try
+            {
+                _universityContext.Update(item);
+                await _universityContext.SaveChangesAsync();
+                return Ok(item);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}/{year}")]

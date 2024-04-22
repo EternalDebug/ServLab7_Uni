@@ -48,10 +48,13 @@ namespace ServLab7.Controllers
         {
             if (item == null)
                 return BadRequest();
-
-            _universityContext.RankingSystems.Add(item);
-            await _universityContext.SaveChangesAsync();
-            return Ok(item);
+            try
+            {
+                _universityContext.RankingSystems.Add(item);
+                await _universityContext.SaveChangesAsync();
+                return Ok(item);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
         [Authorize(Roles = "Admin")]
         [HttpPut]
@@ -62,9 +65,13 @@ namespace ServLab7.Controllers
             if (!_universityContext.RankingSystems.Any(x => x.Id == item.Id))
                 return NotFound();
 
-            _universityContext.Update(item);
-            await _universityContext.SaveChangesAsync();
-            return Ok(item);
+            try
+            {
+                _universityContext.Update(item);
+                await _universityContext.SaveChangesAsync();
+                return Ok(item);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
