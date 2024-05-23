@@ -1,4 +1,4 @@
-﻿namespace ServLab7.Models
+﻿namespace APIuni.Models
 {
     public partial class Uzver
     {

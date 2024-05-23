@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ServLab7.Models
+namespace APIuni.Models
 {
     public partial class University
     {

@@ -2,7 +2,7 @@
 using System.Text;
 
  
-namespace ServLab7
+namespace APIuni
 {
     public class AuthOptions
     {

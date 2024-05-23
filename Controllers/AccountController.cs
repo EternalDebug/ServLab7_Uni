@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System;
-using ServLab7.Models;
+using APIuni.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 
-namespace ServLab7.Controllers
+namespace APIuni.Controllers
 {
     [ApiController]
     [Route("[controller]")]

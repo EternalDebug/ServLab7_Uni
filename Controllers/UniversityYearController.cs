@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ServLab7.Models;
+using APIuni.Models;
 
-namespace ServLab7.Controllers
+namespace APIuni.Controllers
 {
     [ApiController]
     [Route("[controller]")]
